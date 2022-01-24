@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&display=swap");
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: "Outfit", Courier, monospace;
+}
+label {
+	display: inline-block;
+	line-height: 1;
+	margin: 0 0.14rem;
+	background-color: #e8e8e8;
+	padding: 0.58rem 0.83rem;
+	color: rgba(0, 0, 0, 0.6);
+	text-transform: none;
+	font-weight: bold;
+	border-radius: 0.28rem;
+	margin: 1rem 0;
+}
+.form-container {
+	display: flex;
+	justify-content: center;
+}
+input {
+	display: block;
+}
+.form-container div {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	margin: 3rem;
+	padding: 2rem;
+}
+.login {
+	border: red 3px solid;
+}
+.signup {
+	border: green 3px solid;
+}
+.app {
+	display: flex;
+}
+.left-menu {
+	background: #fefefe;
+	min-width: 375px;
+	width: 35%;
+	border-right: 1px solid lightgray;
+}
+.input-container {
+	display: flex;
+	margin-left: 1rem;
+	padding-top: 1rem;
+}
+.input-container input,
+.input-container button {
+	margin: 1rem;
+}
+
+.users-container {
+	grid-template-columns: 1fr;
+	width: 90%;
+	margin-left: 1rem;
+	display: grid;
+	justify-content: center;
+	padding-bottom: 1rem;
+	gap: 0.5rem;
+}
