@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../../models/user");
+const jwt = require("jsonwebtoken");
 const { getData, addUser, deleteUser, withdraw, deposit, setCredit, transfer } = require("./utils/utils");
 const app = express();
 app.use(express.json());
@@ -30,8 +31,8 @@ const getUser = async (req, res) => {
 const postUser = async (req, res) => {
 	try {
 		const user = await addUser(req.body);
-		const token = await user.generateToken();
-		res.status(201).send({ user, token });
+		const genToken = await user.generateToken();
+		res.status(201).send({ user, genToken });
 	} catch (e) {
 		if (e.message.includes("E11000")) return res.status(400).send("User already exists");
 		res.status(500).send(e.message);
@@ -90,11 +91,31 @@ const updateUser = async (req, res) => {
 	res.send(user);
 };
 const login = async (req, res) => {
+	const { email, password, token } = req.body;
+	let user;
 	try {
-		const user = await User.findByCredentials(req.body.email, req.body.password);
-		const token = user.generateToken();
-		res.send(["Logged in!", user]);
+		if (token) {
+			if (jwt.verify(token, "thisisatestsecret")) {
+				user = await User.findByToken(token);
+				if (!user) throw new Error("Token has expired");
+				return res.send({ message: "Logged in!", user, genToken: token });
+			} else {
+				throw new Error("Token has expired");
+			}
+		}
+		user = await User.findByCredentials(email, password);
+		const genToken = await user.generateToken();
+		res.send({ message: "Logged in!", user, genToken: genToken });
 	} catch (e) {
+		if (e.message.includes("expired")) {
+			const user = await User.findByToken(token);
+			if (user) {
+				user.tokens = user.tokens.filter((token) => {
+					token.token !== token;
+				});
+				await user.save();
+			}
+		}
 		res.status(400).send(e.message);
 	}
 };
